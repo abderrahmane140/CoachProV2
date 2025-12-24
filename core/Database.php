@@ -1,15 +1,16 @@
 <?php
 
+
 class Database {
     private static ?PDO $instanse = null;
 
     private function __construct() {}
 
     public static function getConnection () : PDO {
-        if(self::$instanse = null) {
-            $config = require __DIR__ . '../config/database.php';
+        if(self::$instanse === null) {
+            $config = require __DIR__ . '/../config/database.php';
 
-            $dsn ="mysql:host={$config['host']};dbname={$config['username']}";
+            $dsn ="mysql:host={$config['host']};dbname={$config['dbname']}";
 
             self::$instanse = new PDO(
                 $dsn,
