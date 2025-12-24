@@ -5,7 +5,7 @@ class AuthController {
     public function register(){
 
         if($_SERVER['REQUEST_METHOD'] !== "POST"){
-            require "../view/auth/register.php";
+            require "../views/auth/register.php";
             return;
         }
 
@@ -36,7 +36,7 @@ class AuthController {
 
         public function login() {
             if($_SERVER['REQUEST_METHOD'] !== "POST"){
-                require "../view/auth/register.php";
+                require "../views/auth/login.php";
                 return;
             }
 
@@ -69,7 +69,7 @@ class AuthController {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['role'] = $user['role'];
 
-            header('Location: /CoachProV2/view/auth/dashboard.php');
+            header('Location: /CoachProV2/view/coach/dashboard.php');
 
         }
 }
