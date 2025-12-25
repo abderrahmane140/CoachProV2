@@ -2,76 +2,79 @@
 
 class AuthController {
 
-    public function register(){
+    public function register() {
 
-        if($_SERVER['REQUEST_METHOD'] !== "POST"){
-            require "../views/auth/register.php";
+
+        if ($_SERVER['REQUEST_METHOD'] !== "POST") {
+            require __DIR__ . '/../views/auth/login.php';
             return;
         }
 
-            $errors = [];
-        
-            $username = trim($_POST['username']);
-            $email = trim($_POST['email']);
-            $password = $_POST['password'];
-            $role = $_POST['role'];
+        $errors = [];
 
-            if(empty($username) || empty($email) || empty($password)  || empty($role)){
-                    $errors[] = 'All fields are required!';
-            }
+        $username = trim($_POST['username']);
+        $email = trim($_POST['email']);
+        $password = $_POST['password'];
+        $role = $_POST['role'];
 
-            $hashedPassowrd = password_hash($password, PASSWORD_BCRYPT);
+        if (empty($username) || empty($email) || empty($password) || empty($role)) {
+            $errors[] = 'All fields are required!';
+        }
 
-            $user = new User($username, $email, $hashedPassowrd, $role);
-            $user->save();
+        if (!empty($errors)) {
+            $_SESSION['errors'] = $errors;
+            header("Location: /CoachProV2/views/auth/register.php");
+            exit();
+        }
 
-            if(!empty($errors)){
-                $_SESSION['errors'] = $errors;
-                header("Location: /CoachProV2/view/auth/register.php");
-                exit();
-            }
+        $user = new User($username, $email, $password, $role);
+        $user->save();
 
-            header('Location: /CoachProV2/view/auth/login.php');
+        header('Location: /CoachProV2/views/auth/login.php');
+        exit();
     }
 
-        public function login() {
-            if($_SERVER['REQUEST_METHOD'] !== "POST"){
-                require "../views/auth/login.php";
-                return;
-            }
-
-            $errors = [];
-
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-
-            if(empty($email) || empty($password)){
-                $errors[] = 'Both feild are required!';
-            }
+    public function login() {
 
 
-            $user = User::findByEmail($email);
-
-            if(!$user || password_verify($password, $user['password'])){
-                $errors[] = 'invalide credentials!';
-
-            }
-
-
-            if (!empty($errors)){
-                $_SESSION['errors'] = $errors;
-                header('Location: /CoachProV2/view/auth/login.php');
-                exit();
-            }
-
-
-            session_start();
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['role'] = $user['role'];
-
-            header('Location: /CoachProV2/view/coach/dashboard.php');
-
+        if ($_SERVER['REQUEST_METHOD'] !== "POST") {
+            require __DIR__ . '/../views/auth/login.php';
+            return;
         }
-}
 
-?>
+        $errors = [];
+
+        $email = trim($_POST['email']);
+        $password = $_POST['password'];
+
+        if (empty($email) || empty($password)) {
+            $errors[] = 'Both fields are required!';
+        }
+
+        $user = User::findByEmail($email);
+
+        if (!$user || !password_verify($password, $user['password'])) {
+            $errors[] = 'Invalid credentials!';
+        }
+
+        if (!empty($errors)) {
+            $_SESSION['errors'] = $errors;
+
+            exit();
+        }
+
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['role'] = $user['role'];
+
+        header('Location: /CoachProV2/views/coach/index.php');
+        exit();
+    }
+
+    public function logout()
+    {
+        session_start();
+        session_destroy();
+        header('Location: /CoachProV2/public/index.php?action=login');
+        exit();
+    }
+}
