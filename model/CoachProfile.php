@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . "/../core/Database.php";
+require_once __DIR__ . "/../core/Database.php";
 
 class CoachProfile {
     private $id;
@@ -25,11 +25,28 @@ class CoachProfile {
         $pdo = Database::getConnection();
         $stmt = $pdo->prepare("INSERT INTO coach_profiles (user_id, description, experience_years, certifications, photo) VALUES (?,?,?,?,?)");
         return $stmt->execute([
-            $this->description,
             $this->user_id,
+            $this->description,
             $this->experience_years,
             $this->certifications,
             $this->photo
+        ]);
+    }
+
+    public function update() : bool {
+        $pdo = Database::getConnection();
+        $stmt = $pdo->prepare("UPDATE coach_profiles SET         
+            description = :description,
+            experience_years = :experience_years,
+            certifications = :certifications,
+            photo = :photo
+            WHERE user_id = :user_id");
+        return $stmt->execute([
+                'user_id'=> $this->user_id,
+                'description'=> $this->description,
+                'experience_years' => $this->experience_years,
+                'certifications' => $this->certifications,
+                'photo' => $this->photo
         ]);
     }
 
@@ -39,6 +56,13 @@ class CoachProfile {
         $stmt = $pdo->prepare("SELECT * FROM coach_profiles WHERE user_id = ?");
         $stmt->execute([$user_id]);
         return $stmt->fetch();
+    }
+
+    public function checkCoach($user_id) {
+        $pdo = Database::getConnection();
+        $stmt = $pdo->prepare("SELECT * FROM coach_profiles WHERE user_id = :user_id LIMIT 1");
+        $stmt->execute(['user_id'=> $user_id]);
+        return $profile = $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
 
