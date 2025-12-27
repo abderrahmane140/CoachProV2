@@ -59,29 +59,56 @@ CREATE TABLE bookings (
 
 
 
-
---insert into users
 INSERT INTO users (username, email, password, role) VALUES
-('ali', 'ali@coachpro.com', 'password1234', 'atlethe') --id = 3
-('hassan', 'hassan@coachpro.com', 'password123', 'atlethe') --id = 3
+('coach_john', 'john@coach.com', 'password', 'coach'),
+('coach_sara', 'sara@coach.com', 'password', 'coach'),
+('coach_mike', 'mike@coach.com', 'password', 'coach'),
 
-('aymen', 'aymen@coachpro.com', 'password123', 'coach') --id = 3
+('athlete_ali', 'ali@athlete.com', 'password', 'athlete'),
+('athlete_nora', 'nora@athlete.com', 'password', 'athlete'),
+('athlete_yassine', 'yassine@athlete.com', 'password', 'athlete');
 
 
 
+INSERT INTO coach_profiles (user_id, description, experience_years, certifications, photo) VALUES
+(10, 'Fitness and strength training coach', 5, 'NASM CPT', 'john.jpg'),
+(11, 'Yoga and wellness coach', 7, 'Yoga Alliance RYT-500', 'sara.jpg'),
+(12, 'Football conditioning coach', 10, 'UEFA C License', 'mike.jpg');
 
 
 
---inset into availabilities
+INSERT INTO sports (sport_name) VALUES
+('Fitness'),
+('Yoga'),
+('Football'),
+('CrossFit'),
+('Pilates');
+
+
+INSERT INTO coach_sports (coach_profile_id, sport_id) VALUES
+(5, 1), -- John → Fitness
+(5, 4), -- John → CrossFit
+(6, 2), -- Sara → Yoga
+(6, 5), -- Sara → Pilates
+(7, 3); -- Mike → Football
+
+
+
 INSERT INTO availabilities (coach_id, date_avb, start_time, end_time, status) VALUES
-(2, '2025-01-10', '09:00:00', '10:00:00', 'available'),
-(2, '2025-01-11', '14:00:00', '15:00:00', 'available'),
-(2, '2025-01-10', '10:00:00', '11:00:00', 'available');
+(10, '2025-01-05', '09:00:00', '10:00:00', 'available'),
+(10, '2025-01-05', '10:00:00', '11:00:00', 'booked'),
+
+(11, '2025-01-06', '14:00:00', '15:30:00', 'available'),
+(11, '2025-01-06', '16:00:00', '17:00:00', 'available'),
+
+(12, '2025-01-07', '18:00:00', '19:30:00', 'available');
 
 
---insert into 
+
+
 
 INSERT INTO bookings (athlete_id, coach_id, availability_id, status) VALUES
-(3, 2, 1, 'pending'),  
-(3, 2, 2, 'pending'),  
-(3, 2, 3, 'pending'); 
+(13, 10, 6, 'accepted'),   -- Ali booked John
+(14, 11, 10, 'pending'),    -- Nora booked Sara
+(15, 12, 8, 'rejected');   -- Yassine booked Mike
+

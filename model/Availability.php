@@ -1,29 +1,37 @@
 <?php
 
-require __DIR__ . "/../core/Database.php";
+require_once __DIR__ . "/../core/Database.php";
 
 class Availability {
-    private int $id;
+    private ?int $id = null;
     private int $coach_id;
-    private string $date;
-    private string $startTime;
-    private string $endTime;
+    private ?string $date = null;
+    private ?string $startTime = null;
+    private ?string $endTime = null;
     private string $status = 'available';
 
 
 
-    public function setId($id) {
-        $this->id  = $id;
-    }
-    
-    public function __construct($coach_id, $date, $startTime, $endTime, $status)
-    {
+
+    public function __construct(
+        int $coach_id,
+        ?int $id= null,
+        ?string $date = null,
+        ?string $startTime = null,
+        ?string $endTime = null,
+        ?string $status = 'available'
+    ) {
+        $this->id = $id;
         $this->coach_id = $coach_id;
         $this->date = $date;
         $this->startTime = $startTime;
         $this->endTime = $endTime;
-        $this->status = $status;
+        $this->status = $status ?? 'available';
     }
+    public function setId($id) {
+        $this->id  = $id;
+    }
+    
 
     public function save() : bool {
         $pdo = Database::getConnection();
@@ -52,11 +60,11 @@ class Availability {
         return $stmt->fetchAll();
     }
 
-    public function getAll($coach_id) {
+    public static function getAllAvailabilityForCoach($coach_id) {
         $pdo = Database::getConnection();
         $stmt = $pdo->prepare("SELECT * FROM availabilities WHERE coach_id = ?");
-        $stmt->execute();
-        return $stmt->execute([$coach_id]);
+        $stmt->execute([$coach_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); 
     }
 
     public function updateAvailability() : bool {

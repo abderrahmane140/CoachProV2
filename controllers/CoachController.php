@@ -1,26 +1,33 @@
 <?php
 
 require_once __DIR__ .  '/../model/CoachProfile.php';
+require_once __DIR__ . '/../core/Auth.php';
 
 class CoachController {
 
 
     
     public function showProfile(){
-        session_start();
-        
+
+        Auth::requireRole('coach');
+
+
         $user_id = $_SESSION['user_id'];
 
-        $coachProfile = new CoachProfile(null,$user_id, 0, null, null);
-        $profileData =  $coachProfile->getCoachById($user_id);
+
+        $profileData =  CoachProfile::getCoachById($user_id);
 
         require_once __DIR__ . "/../views/coach/profile.php";
     }
 
 
-    public function createProfile() {
 
-        session_start();
+    public function saveProfile() {
+
+        Auth::requireRole('coach');
+
+
+
         $user_id = (int) $_SESSION['user_id'];
 
         $description = $_POST['description'];
@@ -35,6 +42,7 @@ class CoachController {
             $photo = $fileName;
         }
 
+
         $coachProfile = new CoachProfile(
             $description,
             $user_id,
@@ -43,46 +51,29 @@ class CoachController {
             $photo
         );
 
-        $coachProfile->save();
+        if($coachProfile->exists($user_id)){
+          $coachProfile->update();  
+        }else{
+            $coachProfile->save();
+        }
+
 
         header("Location: index.php?action=showProfile");
         exit;   
     }
 
-    public function updateProfile(){
-        session_start();
-        $coach_id = $_SESSION['user_id'];
 
 
-        $description = $_POST['description'];
-        $experience_years = $_POST['experience_years'];
-        $certifications = $_POST['certifications'];
-        $photo =  null;
-
-        if (!empty($_FILES['photo']['name'])) {
-            $uploadDir = __DIR__ . '/../uploads/';
-            $fileName = time() . '_' . basename($_FILES['photo']['name']);
-            move_uploaded_file($_FILES['photo']['tmp_name'], $uploadDir . $fileName);
-            $photo = $fileName;
-        }
+    //get all the coachs for the user 
 
 
-        $coach = new CoachProfile(
-            $description,
-            $coach_id,
-            $experience_years,
-            $certifications,
-            $photo
-        );
+     public function getAllCoaches() {
 
-        if($coach->update()){
-            header("Location: index.php?action=showProfile");
-        }else{
-            echo "Error updating coach";
-        }
+        Auth::requireRole('athlete');
+        $coachs = CoachProfile::getAllCoaches();
 
+        require_once __DIR__ . "/../views/athlete/coachs.php";
 
     }
-
 }
 ?>
