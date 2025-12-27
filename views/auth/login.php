@@ -11,7 +11,6 @@
 
   <div class="w-full max-w-sm bg-white p-8 rounded-lg shadow-md">
     <?php
-    session_start();
     if(!empty($_SESSION['errors'])) :
     ?>
     <div class="mb-4 rounded-md bg-red-100 border border-red-400 p-3 text-sm text-red-700">
@@ -26,7 +25,7 @@
       Login to your account
     </h2>
 
-    <form action="../../public/index.php?action=login" method="POST" class="space-y-6">
+    <form action="/CoachProV2/public/index.php?action=login" method="POST" class="space-y-6">
       
       <!-- Email -->
       <div>
