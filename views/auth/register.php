@@ -11,7 +11,6 @@
 
   <div class="w-full max-w-sm bg-white p-8 rounded-lg shadow-md">
     <?php
-    session_start();
     if(!empty($_SESSION['errors'])) :
     ?>
     <div class="mb-4 rounded-md bg-red-100 border border-red-400 p-3 text-sm text-red-700">
@@ -26,7 +25,7 @@
       Create an account
     </h2>
 
-    <form action="../../public/index.php?action=register" method="POST" class="space-y-6">
+    <form action="/CoachProV2/public/index.php?action=register" method="POST" class="space-y-6">
 
       <!-- Username -->
       <div>
@@ -115,7 +114,7 @@
       </div>
     </form>
     <div class="mt-3 text-center text-gray-600 hover:text-gray-400">
-      <a class="" href="/CoachPro/pages/login.php">Alreay have acount</a>
+      <a class="" href="/CoachProV2/public/index.php?action=login">Alreay have acount</a>
     </div>
   </div>
 
