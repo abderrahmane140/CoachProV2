@@ -7,14 +7,14 @@ class User{
     protected $username;
     protected $email;
     protected $password;
-    protected $role;
+    protected string $role;
 
 
-    public function __construct($username,$email, $password, $role)
+    public function __construct($username, $email, $hashedPassword, $role)
     {
         $this->username = $username;
         $this->email = $email;
-        $this->password = password_hash($password, PASSWORD_DEFAULT);
+        $this->password = $hashedPassword;
         $this->role = $role;
 
     }
